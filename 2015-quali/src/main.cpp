@@ -130,7 +130,7 @@ public:
     m.setObjective(tau * 1.0, GRB_MAXIMIZE);
 
     // some (inexact) cuts, read: "do not put too many servers of one row into one pool"
-    int max_server_per_row_per_pool = 1;
+    int max_server_per_row_per_pool = 4;
     for (int r = 0; r < R; r++){
       for (int p = 0; p < P; p++){
         GRBLinExpr expr = 0;
