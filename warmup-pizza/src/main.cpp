@@ -1,7 +1,7 @@
 /*
   This file contains the source code for Google Hash Codes Pizza Exercise.
-  It uses a divide-and-conquer approach. To this end, the whole area R x C is
-  divided into smaller areas of size split x split. Then for each small area
+  It uses a divide-and-conquer approach. To this end, the whole area (R x C) is
+  divided into smaller areas of size (split x split). Then for each small area
   all possible pizza cuts are determined and stored as vertices. For each pair
   of vertices (i.e., pizza cuts) it is determined if they overlap. If so, an
   edge is added between them. For this graph of vertices and edges a mixed-
@@ -24,7 +24,7 @@ using namespace std;
 
 typedef pair<int, int> pi;
 
-int split = 12; // size of divide-and-conquer squares. 15 is still okay in speed
+int split = 10; // size of divide-and-conquer squares. 15 is still okay in speed
 
 class vertex{
   // each possible pizza cut is stored in a vertex
@@ -150,7 +150,7 @@ public:
             indices.push_back(i);
           }
       }
-      // cerr << m.get(GRB_DoubleAttr_ObjVal) << endl;
+      cout << m.get(GRB_DoubleAttr_ObjVal) << endl;
 
     }
     void cover_area(vertex &v){
@@ -179,6 +179,25 @@ public:
       }
     }
 
+    void solve(){
+      // preprocessing
+      get_shapes();
+
+      cerr << "square size: " << split << " x " <<  split << endl;
+      // solve by divide-and-conquer:
+      // start cutting from top left to bottom right..
+      for (int r = split; r <= max(split, R); r += split){
+        for (int c = split; c <= max(split, C); c += split){
+          cout << r << " x " << c << endl;
+          solve_area(r, c);
+        }
+        solve_area(r, C);
+      }
+      for (int c = split; c <= max(split, C); c += split) solve_area(R, c);
+      solve_area(R, C);
+      cerr << "score: " << score << endl;
+    }
+
     // instance variables
     int C, R;
     int min_items, max_cells;
@@ -194,34 +213,21 @@ int main(int argc, char** argv){
   ios::sync_with_stdio(false);
   cin.tie(0);
 
+  instance I;
+
   // file input
   string filename;
   if (argc < 2) filename = "example";
   else filename = argv[1];
   string input_file = "../data/" + filename + ".in";
   freopen(input_file.c_str(), "r", stdin);
-
-  // preprocessing
-  instance I;
   I.read();
-  I.get_shapes();
 
-  // solve by divide-and-conquer
-  cerr << "size of pizza is: " << I.R << " x " << I.C << endl;
-  cerr << "divide-and-conquer size is: " << split << " x " <<  split << endl;
-  cerr << "start cutting from top left to bottom right.." << endl;
-  for (int r = split; r <= max(split, I.R ); r += split){
-    for (int c = split; c <= max(split, I.C); c += split){
-      cerr << r << " x " << c << endl;
-      I.solve_area(r, c);
-    }
-    I.solve_area(r, I.C);
-  }
-  for (int c = split; c <= max(split, I.C); c += split) I.solve_area(I.R, c);
-  I.solve_area(I.R, I.C);
+  // solve instance
+  I.solve();
 
-  cerr << "finished. score is: " << I.score << endl;
-  string output_file = "../out/" + filename;
+  // file output
+  string output_file = "../out/" + filename + ".out";
   freopen(output_file.c_str(), "w", stdout);
   I.write_output();
 }
