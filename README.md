@@ -4,4 +4,4 @@ In this repo I gradually add my solutions to various google hash code tasks I so
 # Results on original instances
 * Pizza Warm-Up: With an area choice of 15x15, the pizza is cut quite decent with 49987/50000 on medium and 965521/1000000 on big.
 * Street View Routing: The pruned bfs yields 1930138, outperforming the on-site scores.
-* Optimize a data center: The result of 390 is a top 10 place regarding the on-site scores.
+* Optimize a data center: The result of 390 is a top 15 place regarding the on-site scores.
